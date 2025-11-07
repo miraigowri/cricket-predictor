@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>20 Predicted teams</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Top 20 Predicted Teams</h1>
+      <div id="results"></div>
+      <button onclick="goHome()">Back to home</button>
+    </div>
+    <script>
+         function goHome() {
+             window.location.href = "index.html";
+         }
+     const teams = JSON.parse(localStorage.getItem('predictedTeams')) || [];
+     console.log('Loaded predictedTeams from localStorage:', teams);
+     const resultDiv = document.getElementById('results');
+
+     if (!teams || teams.length === 0) {
+       resultDiv.innerHTML = '<p>No predicted teams found. Please generate teams from the home page first.</p>';
+       // early exit
+     } else {
+     teams.forEach((team,i) => {
+             const div = document.createElement('div');
+             div.className = 'teambox';
+              div.innerHTML = `
+             <h3>Team ${i + 1}</h3>
+             <ul>${team.players.map(p => `
+             <li>${p.name} (${Number(p.PL || 0).toFixed(1)})
+             ${p.name === team.captain ? '(c)' : ''}
+             ${p.name === team.viceCaptain ? '(vc)' : ''}
+             </li>
+             `).join('')}</ul>
+             <p><b>Total PL:</b> ${Number(team.totalPl || 0).toFixed(1)}</p>
+             `;
+        resultDiv.appendChild(div);
+      });
+      }
+    </script>
+  </body>
+</html>
